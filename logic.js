@@ -1,32 +1,15 @@
-function waitForElm(selector) {
-	return new Promise(resolve => {
-		if (document.querySelector(selector)) {
-			return resolve(document.querySelector(selector));
-		}
+const DELIMITER = "[]C[]H[]A[]N[]T[]U[]"
 
-		const observer = new MutationObserver(mutations => {
-			if (document.querySelector(selector)) {
-				resolve(document.querySelector(selector));
-				observer.disconnect();
-			}
-		});
-
-		observer.observe(document.body, {
-			childList: true,
-			subtree: true
-		});
-	});
-}
-
+// wait for whatsapp to complete loading
 waitForElm('._2JIth').then(() => {
 	setTimeout(() => {
 		document.onscroll = addListnerToAddEncryptSendButton()
 	}, 1000);
+
 })
 
 // set user's private key on page load
 window.onload = setPrivateKey
-
 async function setPrivateKey() {
 	chrome.storage.sync.get(['PRIVATE_KEY'], function (items) {
 		if (Object.keys(items).length !== 0) {
@@ -55,6 +38,10 @@ async function addListnerToAddEncryptSendButton() {
 }
 
 function addEncryptSendButton() {
+	decryptAllMessages();
+
+	// decrypt on new messages
+	document.getElementsByClassName("_33LGR")[0].onscroll = () => decryptAllMessages();
 	// clone send button
 	const encryptSend = document.getElementsByClassName("_3HQNh _1Ae7k")[0].cloneNode(true)
 
@@ -74,14 +61,54 @@ function encryptAndSend() {
 	if (!message) return;
 
 	const encryptedMessage = encryptMessage(message);
+
 	messageBox.innerHTML = encryptedMessage;
 	eventx = document.createEvent("UIEvents");
 	eventx.initUIEvent("input", true, true, window, 1);
 	messageBox.dispatchEvent(eventx);
 
 	document.querySelector('span[data-icon="send"]').click();
+	decryptAllMessages()
 }
 
 function encryptMessage(message) {
-	return "{}/" + message + "{}"
+	return "{}/" + message + "{}" + DELIMITER
+}
+
+function waitForElm(selector) {
+	return new Promise(resolve => {
+		if (document.querySelector(selector)) {
+			return resolve(document.querySelector(selector));
+		}
+
+		const observer = new MutationObserver(mutations => {
+			if (document.querySelector(selector)) {
+				resolve(document.querySelector(selector));
+				observer.disconnect();
+			}
+		});
+
+		observer.observe(document.body, {
+			childList: true,
+			subtree: true
+		});
+	});
+}
+
+function decrypt(message) {
+	return "DECRYPTED " + message
+}
+
+function decryptAllMessages() {
+	const messages = document.getElementsByClassName("y8WcF")[0].children
+	for (let i = 0; i < messages.length; i++) {
+		if (!messages[i].classList.contains('decrypted') && (messages[i].classList.contains('message-in') || messages[i].classList.contains('message-out'))) {
+			const messageNode = messages[i].getElementsByClassName("i0jNr selectable-text copyable-text")[0]
+			const message = messageNode?.textContent
+			if (message && message.slice(-DELIMITER.length) === DELIMITER) {
+				messages[i].classList.add('decrypted')
+				messageNode.innerHTML = decrypt(message);
+			}
+		}
+	}
 }
