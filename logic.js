@@ -18,6 +18,10 @@ function encryptMessage() {
 	if (!message) return;
 	const encryptedMessage = "ENCRYPT" + message + "ENCRYPT"
 	messageBox.innerHTML = encryptedMessage;
+	eventx = document.createEvent("UIEvents");
+	eventx.initUIEvent("input", true, true, window, 1);
+	messageBox.dispatchEvent(eventx);
+	document.querySelector('span[data-icon="send"]').click();
 }
 
 function addListnerToAddEncryptSendButton() {
