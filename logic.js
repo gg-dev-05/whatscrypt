@@ -1,3 +1,29 @@
+function waitForElm(selector) {
+	return new Promise(resolve => {
+		if (document.querySelector(selector)) {
+			return resolve(document.querySelector(selector));
+		}
+
+		const observer = new MutationObserver(mutations => {
+			if (document.querySelector(selector)) {
+				resolve(document.querySelector(selector));
+				observer.disconnect();
+			}
+		});
+
+		observer.observe(document.body, {
+			childList: true,
+			subtree: true
+		});
+	});
+}
+
+waitForElm('._2JIth').then(() => {
+	setTimeout(() => {
+		document.onscroll = addListnerToAddEncryptSendButton()
+	}, 1000);
+})
+
 function addEncryptSendButton() {
 	// clone send button
 	const encryptSend = document.getElementsByClassName("_3HQNh _1Ae7k")[0].cloneNode(true)
@@ -25,6 +51,7 @@ function encryptMessage() {
 }
 
 function addListnerToAddEncryptSendButton() {
+	alert("Ok")
 	const people = document.getElementsByClassName("_3m_Xw")
 	const len = people.length
 	for (let i = 0; i < len; i++) {
@@ -32,4 +59,3 @@ function addListnerToAddEncryptSendButton() {
 	}
 }
 
-document.onscroll = addListnerToAddEncryptSendButton()
