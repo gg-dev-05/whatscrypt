@@ -8,5 +8,6 @@
       "matches": [ "*://web.whatsapp.com/*" ],
       "js": ["logic.js"]
     }
-  ]
+  ],
+  "permissions": ["storage"]
 }
