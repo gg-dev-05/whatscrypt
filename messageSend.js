@@ -27,9 +27,9 @@ Schedule your message section ends here*/
 
 // Replace My Contact Name with the name
 // of your WhatsApp contact or group e.g. title="Peter Parker"
-name = "Noobctypt"
+title = "Noobctypt"
 
-simulateMouseEvents(document.querySelector('[title="' + name + '"]'), 'mousedown');
+simulateMouseEvents(document.querySelector('[title="' + title + '"]'), 'mousedown');
 
 function startTimer() {
 	setTimeout(myFunc, 3000);
@@ -53,10 +53,10 @@ function myFunc() {
 	counter = 100; // Replace 5 with the number of times you want to send your message
 
 	for (i = 0; i < counter; i++) {
-		event = document.createEvent("UIEvents");
+		eventx = document.createEvent("UIEvents");
 		messageBox.innerHTML = message.replace(/ /gm, ''); // test it
-		event.initUIEvent("input", true, true, window, 1);
-		messageBox.dispatchEvent(event);
+		eventx.initUIEvent("input", true, true, window, 1);
+		messageBox.dispatchEvent(eventx);
 
 		eventFire(document.querySelector('span[data-icon="send"]'), 'click');
 	}
