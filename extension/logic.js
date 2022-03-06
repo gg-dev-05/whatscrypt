@@ -47,7 +47,8 @@ function addEncryptSendButton() {
   encryptSend.children[0].onclick = () => { encryptAndSend() }
 
   // add after send button
-  document.getElementsByClassName("_2lMWa")[0].append(encryptSend)
+  if(document.getElementsByClassName("_2lMWa")[0].childElementCount < 3) 
+ 	document.getElementsByClassName("_2lMWa")[0].append(encryptSend)
 }
 
 async function encryptAndSend() {
