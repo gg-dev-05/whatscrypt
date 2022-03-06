@@ -1,6 +1,5 @@
 const DELIMITER = "[]C[]H[]A[]N[]T[]U[]"
-
-globalThis.test
+const user = globalThis.initialize();
 // wait for whatsapp to complete loading
 waitForElm('._2JIth').then(() => {
 	setTimeout(() => {
@@ -10,18 +9,13 @@ waitForElm('._2JIth').then(() => {
 })
 
 // set user's private key on page load
-window.onload = setPrivateKey
+window.onload = setPrivateKey;
+
 async function setPrivateKey() {
-	chrome.storage.sync.get(['PRIVATE_KEY'], function (items) {
-		if (Object.keys(items).length !== 0) {
-			alert(`PRIVATE_KEY: ${items['PRIVATE_KEY']}`)
-		}
-		else {
-			chrome.storage.sync.set({ 'PRIVATE_KEY': 'SOME_SECRET_PRIVATE_KEY' }, function () {
-				alert("PRIVATE KEY SET")
-			});
-		}
-	});
+	chrome.storage.sync.clear();
+	const privateKey = await getFromStorage('PRIVATE_KEY');
+	if (!privateKey)
+		setToStorage('PRIVATE_KEY', user.secretKey);
 }
 
 async function addListnerToAddEncryptSendButton() {
@@ -39,10 +33,10 @@ async function addListnerToAddEncryptSendButton() {
 }
 
 function addEncryptSendButton() {
-	decryptAllMessages();
+	// decryptAllMessages();
 
 	// decrypt on new messages
-	document.getElementsByClassName("_33LGR")[0].onscroll = () => decryptAllMessages();
+	// document.getElementsByClassName("_33LGR")[0].onscroll = () => decryptAllMessages();
 	// clone send button
 	const encryptSend = document.getElementsByClassName("_3HQNh _1Ae7k")[0].cloneNode(true)
 
@@ -56,12 +50,12 @@ function addEncryptSendButton() {
 	document.getElementsByClassName("_2lMWa")[0].append(encryptSend)
 }
 
-function encryptAndSend() {
+async function encryptAndSend() {
 	const messageBox = document.querySelectorAll("[contenteditable='true']")[1];
 	const message = messageBox.innerHTML
 	if (!message) return;
 
-	const encryptedMessage = encryptMessage(message);
+	const encryptedMessage = await encryptMessage(message);
 
 	messageBox.innerHTML = encryptedMessage;
 	eventx = document.createEvent("UIEvents");
@@ -69,11 +63,13 @@ function encryptAndSend() {
 	messageBox.dispatchEvent(eventx);
 
 	document.querySelector('span[data-icon="send"]').click();
-	decryptAllMessages()
+	// decryptAllMessages()
 }
 
-function encryptMessage(message) {
-	return "{}/" + message + "{}" + DELIMITER
+async function encryptMessage(message) {
+	const obj = globalThis.encrypt(user.secretKey, user.publicKey, message)
+	const encryptedMessage = obj.cipherText.toString() + DELIMITER + obj.oneTimeCode.toString();
+	return encryptedMessage
 }
 
 function waitForElm(selector) {
@@ -112,4 +108,11 @@ function decryptAllMessages() {
 			}
 		}
 	}
+}
+
+const getFromStorage = key => new Promise((resolve, reject) =>
+	chrome.storage.sync.get(key, result => resolve(result[key])));
+
+const setToStorage = (key, value) => {
+	chrome.storage.sync.set({ [key]: value })
 }
