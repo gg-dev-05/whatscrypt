@@ -1,5 +1,6 @@
 const DELIMITER = "[]C[]H[]A[]N[]T[]U[]"
 
+globalThis.test
 // wait for whatsapp to complete loading
 waitForElm('._2JIth').then(() => {
 	setTimeout(() => {
