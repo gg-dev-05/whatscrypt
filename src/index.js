@@ -1,3 +1,4 @@
+const DELIMITER = "[]C[]H[]A[]N[]T[]U[]"
 const nacl = require("tweetnacl");
 nacl.util = require("tweetnacl-util");
 
@@ -19,7 +20,23 @@ function decrypt(myPrivateKey, theirPublicKey, encryptedMessage) {
   return plainText
 }
 
-globalThis.nacl = nacl;
-globalThis.initialize = initialize;
-globalThis.encrypt = encrypt;
-globalThis.decrypt = decrypt;
+const david = initialize();
+const victoria = initialize();
+
+const message = "HELO";
+
+const encryptedMessage = encrypt(david.secretKey, victoria.publicKey, message);
+const messageString = nacl.util.encodeBase64(encryptedMessage.cipherText) + DELIMITER + nacl.util.encodeBase64(encryptedMessage.oneTimeCode);
+console.log(messageString);
+
+
+const messageGot = messageString.split(DELIMITER);
+const obj = {
+  cipherText: nacl.util.decodeBase64(messageGot[0]),
+  oneTimeCode: nacl.util.decodeBase64(messageGot[1]),
+}
+console.log(decrypt(victoria.secretKey, david.publicKey, obj));
+// globalThis.nacl = nacl;
+// globalThis.initialize = initialize;
+// globalThis.encrypt = encrypt;
+// globalThis.decrypt = decrypt;

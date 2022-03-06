@@ -2540,9 +2540,14 @@ function encrypt(myPrivateKey, theirPublicKey, message) {
 
 function decrypt(myPrivateKey, theirPublicKey, encryptedMessage) {
   const sharedKey = nacl.box.before(theirPublicKey, myPrivateKey);
+  console.log(sharedKey)
+  console.log(encryptedMessage.cipherText);
+  console.log(encryptedMessage.oneTimeCode);
   const message = nacl.box.open.after(encryptedMessage.cipherText, encryptedMessage.oneTimeCode, sharedKey);
-  const plainText = nacl.util.encodeUTF8(message);
-  return plainText
+  console.log(message)
+  return "TESTING FAILED"
+  // const plainText = nacl.util.encodeUTF8(message);
+  // return plainText
 }
 
 globalThis.nacl = nacl;
