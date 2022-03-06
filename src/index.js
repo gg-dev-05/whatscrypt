@@ -19,6 +19,7 @@ function decrypt(myPrivateKey, theirPublicKey, encryptedMessage) {
 	return plainText
 }
 
+globalThis.nacl = nacl;
 globalThis.initialize = initialize;
 globalThis.encrypt = encrypt;
 globalThis.decrypt = decrypt;

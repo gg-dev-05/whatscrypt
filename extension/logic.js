@@ -33,10 +33,10 @@ async function addListnerToAddEncryptSendButton() {
 }
 
 function addEncryptSendButton() {
-	// decryptAllMessages();
+	decryptAllMessages();
 
 	// decrypt on new messages
-	// document.getElementsByClassName("_33LGR")[0].onscroll = () => decryptAllMessages();
+	document.getElementsByClassName("_33LGR")[0].onscroll = () => decryptAllMessages();
 	// clone send button
 	const encryptSend = document.getElementsByClassName("_3HQNh _1Ae7k")[0].cloneNode(true)
 
@@ -63,12 +63,12 @@ async function encryptAndSend() {
 	messageBox.dispatchEvent(eventx);
 
 	document.querySelector('span[data-icon="send"]').click();
-	// decryptAllMessages()
+	decryptAllMessages()
 }
 
 async function encryptMessage(message) {
 	const obj = globalThis.encrypt(user.secretKey, user.publicKey, message)
-	const encryptedMessage = obj.cipherText.toString() + DELIMITER + obj.oneTimeCode.toString();
+	const encryptedMessage = nacl.util.encodeBase64(obj.cipherText) + DELIMITER + nacl.util.encodeBase64(obj.oneTimeCode);
 	return encryptedMessage
 }
 
@@ -92,19 +92,24 @@ function waitForElm(selector) {
 	});
 }
 
-function decrypt(message) {
-	return "DECRYPTED " + message
-}
-
 function decryptAllMessages() {
 	const messages = document.getElementsByClassName("y8WcF")[0].children
 	for (let i = 0; i < messages.length; i++) {
 		if (!messages[i].classList.contains('decrypted') && (messages[i].classList.contains('message-in') || messages[i].classList.contains('message-out'))) {
 			const messageNode = messages[i].getElementsByClassName("i0jNr selectable-text copyable-text")[0]
 			const message = messageNode?.textContent
-			if (message && message.slice(-DELIMITER.length) === DELIMITER) {
+			if (message && message.includes(DELIMITER)) {
+				console.log(message);
 				messages[i].classList.add('decrypted')
-				messageNode.innerHTML = decrypt(message);
+				const messageComponents = message.split(DELIMITER)
+				if (messageComponents.length === 2) {
+					const obj = {
+						cipherText: nacl.util.decodeBase32(messageComponents[0]),
+						oneTimeCode: nacl.util.decodeBase32(messageComponents[1]),
+					}
+					console.log(obj);
+					// messageNode.innerHTML = globalThis.decrypt(user.secretKey, user.publicKey, obj);
+				}
 			}
 		}
 	}
