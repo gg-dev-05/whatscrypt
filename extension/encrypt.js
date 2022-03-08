@@ -2524,6 +2524,7 @@ nacl.setPRNG = function(fn) {
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
+const DELIMITER = "B+homS+/TiLl"
 const nacl = __webpack_require__(780);
 nacl.util = __webpack_require__(885);
 
@@ -2540,16 +2541,28 @@ function encrypt(myPrivateKey, theirPublicKey, message) {
 
 function decrypt(myPrivateKey, theirPublicKey, encryptedMessage) {
   const sharedKey = nacl.box.before(theirPublicKey, myPrivateKey);
-  console.log(sharedKey)
-  console.log(encryptedMessage.cipherText);
-  console.log(encryptedMessage.oneTimeCode);
   const message = nacl.box.open.after(encryptedMessage.cipherText, encryptedMessage.oneTimeCode, sharedKey);
-  console.log(message)
-  return "TESTING FAILED"
-  // const plainText = nacl.util.encodeUTF8(message);
-  // return plainText
+  const plainText = nacl.util.encodeUTF8(message);
+  console.log(plainText);
+  return plainText;
 }
 
+// const david = initialize();
+// const victoria = initialize();
+
+// const message = "HELO";
+
+// const encryptedMessage = encrypt(david.secretKey, victoria.publicKey, message);
+// const messageString = nacl.util.encodeBase64(encryptedMessage.cipherText) + DELIMITER + nacl.util.encodeBase64(encryptedMessage.oneTimeCode);
+// console.log(messageString);
+
+
+// const messageGot = messageString.split(DELIMITER);
+// const obj = {
+//   cipherText: nacl.util.decodeBase64(messageGot[0]),
+//   oneTimeCode: nacl.util.decodeBase64(messageGot[1]),
+// }
+// console.log(decrypt(victoria.secretKey, david.publicKey, obj));
 globalThis.nacl = nacl;
 globalThis.initialize = initialize;
 globalThis.encrypt = encrypt;

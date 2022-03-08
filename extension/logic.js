@@ -13,17 +13,25 @@ waitForElm('._2JIth').then(() => {
 window.onload = setPrivateKey;
 
 async function setPrivateKey() {
+	// TODOS:
+	// [1] Query API to check if this user exists or not
+	// [2] 
+	//  If already exists check local storage for private key
+	// 	[2.1] Private key exists => Do nothing, continue
+	//  [2.2] Private key does not exist =>
+	//					[2.2.1]	Remove user's public key from db
+	//					[2.2.2] Generate new pair
+	//					[2.2.3] Post public key to db
+	//					[2.2.4] Save private key locally 
+	// If does not exist
 	// chrome.storage.sync.clear();
 	// const privateKey = await getFromStorage('PRIVATE_KEY');
 	// if (!privateKey)
-	// setToStorage('PRIVATE_KEY', user.secretKey);
+	// 	setToStorage('PRIVATE_KEY', user.secretKey);
 }
 
 async function addListnerToAddEncryptSendButton() {
-	// dummy fetch
-	// await fetch('https://jsonplaceholder.typicode.com/todos/1')
-	// 	.then(response => response.json())
-	// 	.then(json => alert(json.title))
+
 	const people = document.getElementsByClassName("_3m_Xw")
 	const len = people.length
 
@@ -58,7 +66,6 @@ async function encryptAndSend() {
 	if (!message) return;
 
 	const encryptedMessage = await encryptMessage(message);
-
 	messageBox.innerHTML = encryptedMessage;
 	eventx = document.createEvent("UIEvents");
 	eventx.initUIEvent("input", true, true, window, 1);
@@ -70,10 +77,9 @@ async function encryptAndSend() {
 }
 
 async function encryptMessage(message) {
-	const obj = globalThis.encrypt(david.secretKey, victoria.publicKey, message)
-	console.log(obj);
-	const encryptedMessage = nacl.util.encodeBase64(obj.cipherText) + DELIMITER + nacl.util.encodeBase64(obj.oneTimeCode);
-	return encryptedMessage
+	const encryptedMessage = globalThis.encrypt(david.secretKey, victoria.publicKey, message);
+	const messageString = nacl.util.encodeBase64(encryptedMessage.cipherText) + DELIMITER + nacl.util.encodeBase64(encryptedMessage.oneTimeCode);
+	return messageString;
 }
 
 function waitForElm(selector) {
@@ -102,17 +108,22 @@ function decryptAllMessages() {
 		if (!messages[i].classList.contains('decrypted') && (messages[i].classList.contains('message-in') || messages[i].classList.contains('message-out'))) {
 			const messageNode = messages[i].getElementsByClassName("i0jNr selectable-text copyable-text")[0]
 			const message = messageNode?.textContent
-			if (message && message.includes(DELIMITER)) {
-				messages[i].classList.add('decrypted')
-				const messageComponents = message.split(DELIMITER)
-				if (messageComponents.length === 2) {
-					const obj = {
-						cipherText: nacl.util.decodeBase64(messageComponents[0]),
-						oneTimeCode: nacl.util.decodeBase64(messageComponents[1]),
+			try {
+				if (message && message.includes(DELIMITER)) {
+					messages[i].classList.add('decrypted')
+					const messageComponents = message.split(DELIMITER)
+					if (messageComponents.length === 2) {
+						const messageGot = message.split(DELIMITER);
+						const obj = {
+							cipherText: nacl.util.decodeBase64(messageGot[0]),
+							oneTimeCode: nacl.util.decodeBase64(messageGot[1]),
+						}
+						messageNode.innerHTML = globalThis.decrypt(victoria.secretKey, david.publicKey, obj);
 					}
-					console.log(globalThis.decrypt(victoria.secretKey, david.publicKey, obj));
-					// messageNode.innerHTML = globalThis.decrypt(user.secretKey, user.publicKey, obj);
 				}
+			} catch (error) {
+				console.error("Unable to decrypt, Invalid keys")
+				messageNode.innerHTML = " ==== Unable to decrypt this message ==== "
 			}
 		}
 	}
@@ -124,3 +135,8 @@ const getFromStorage = key => new Promise((resolve, reject) =>
 const setToStorage = (key, value) => {
 	chrome.storage.sync.set({ [key]: value })
 }
+
+// dummy fetch
+// await fetch('https://jsonplaceholder.typicode.com/todos/1')
+// 	.then(response => response.json())
+// 	.then(json => alert(json.title))
