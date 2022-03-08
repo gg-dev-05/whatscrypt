@@ -9,5 +9,8 @@
       "js": ["encrypt.js", "functions.js", "logic.js"]
     }
   ],
+  "host_permissions": [
+    "http://localhost:3000/*"
+  ],
   "permissions": ["storage"]
 }

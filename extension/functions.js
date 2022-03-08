@@ -18,7 +18,7 @@ function waitForElementToLoad(selector) {
   });
 }
 
-function addEncryptSendButton() {
+function openContact() {
   // decrypt on new messages
   document.getElementsByClassName("_33LGR")[0].onscroll = () => decryptAllMessages();
   // clone send button
@@ -35,13 +35,13 @@ function addEncryptSendButton() {
     document.getElementsByClassName("_2lMWa")[0].append(encryptSend)
 }
 
-async function addListnerToAddEncryptSendButton() {
+async function addOnClickListnerForContacts() {
   const people = document.getElementsByClassName("_3m_Xw")
   const len = people.length
 
   // add onClick listner for each contact
   for (let i = 0; i < len; i++) {
-    people[i].onclick = () => { addEncryptSendButton() }
+    people[i].onclick = () => { openContact() }
   }
 }
 
@@ -92,16 +92,39 @@ function decryptAllMessages() {
   }
 }
 
-const getFromStorage = key => new Promise((resolve, reject) =>
-  chrome.storage.sync.get(key, result => resolve(result[key])));
+// function getFromStorage(key) {
+//   return new Promise((resolve, reject) => {
+//     chrome.storage.sync.get(key, result => resolve(result[key]));
+//   })
+// }
 
-const setToStorage = (key, value) => {
-  chrome.storage.sync.set({ [key]: value })
+const getFromStorage = key => {
+  new Promise((resolve, reject) => {
+    chrome.storage.sync.get(key, result =>
+      chrome.runtime.lastError
+        ? reject(Error(chrome.runtime.lastError.message))
+        : resolve(result)
+    )
+  })
+}
+
+// function setToStorage(key, value) {
+//   chrome.storage.sync.set({ [key]: value })
+// }
+
+const setToStorage = data => {
+  new Promise((resolve, reject) => {
+    chrome.storage.sync.set(data, () =>
+      chrome.runtime.lastError
+        ? reject(Error(chrome.runtime.lastError.message))
+        : resolve()
+    )
+  })
 }
 
 globalThis.waitForElementToLoad = waitForElementToLoad;
-globalThis.addListnerToAddEncryptSendButton = addListnerToAddEncryptSendButton;
-globalThis.addEncryptSendButton = addEncryptSendButton;
+globalThis.addOnClickListnerForContacts = addOnClickListnerForContacts;
+globalThis.openContact = openContact;
 globalThis.encryptAndSend = encryptAndSend;
 globalThis.encryptMessage = encryptMessage;
 globalThis.decryptAllMessages = decryptAllMessages;
