@@ -6,7 +6,7 @@
   "content_scripts": [
     {
       "matches": [ "*://web.whatsapp.com/*" ],
-      "js": ["encrypt.js", "logic.js"]
+      "js": ["encrypt.js", "functions.js", "logic.js"]
     }
   ],
   "permissions": ["storage"]
