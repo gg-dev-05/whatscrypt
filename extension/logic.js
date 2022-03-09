@@ -43,7 +43,7 @@ async function main() {
 }
 
 async function getPublicKey() {
-  await getPhoneNumber("Enter phone number for verification of your public key");
+  await getPhoneNumber("Enter phone number for verification of your public key (without country code)");
   if (stopWhatscrypt) return;
   return globalThis.getPublicKeyFromServer(phoneNumber);
 }
