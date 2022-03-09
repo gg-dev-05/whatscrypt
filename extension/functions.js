@@ -1,3 +1,5 @@
+// TODO: shift+enter
+// TODO: add lock symbol with msgs that are decrypted
 function waitForElementToLoad(selector) {
   return new Promise(resolve => {
     if (document.querySelector(selector)) {
@@ -134,6 +136,17 @@ function decryptAllMessages() {
             }
             messageNode.innerHTML = globalThis.decrypt(nacl.util.decodeBase64(globalThis.user.encodedPrivateKey), nacl.util.decodeBase64(globalThis.contactPhoneNumberPublicKey), obj)
           }
+          const lockEle = document.createElement('img');
+          lockEle.height = "15"
+          lockEle.width = "15"
+          lockEle.style.marginLeft = "5px"
+          lockEle.style.color = "rgba(255,255,255,0.6)"
+          if (messages[i].classList.contains('message-in')) {
+            lockEle.src = "https://icons8.com/icon/cEcnYFV2oyXU/unlock"
+          } else {
+            lockEle.src = "https://img.icons8.com/ios-glyphs/30/000000/lock--v1.png"
+          }
+          messages[i].querySelector('.l7jjieqr').parentElement.append(lockEle)
         }
       } catch (error) {
         console.error("Unable to decrypt, Invalid keys")
