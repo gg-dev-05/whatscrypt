@@ -94,17 +94,21 @@ async function addOnClickListnerForContacts() {
 }
 
 function encryptAndSend() {
-  const messageBox = document.querySelectorAll("[contenteditable='true']")[1];
-  const message = messageBox.innerHTML
-  if (!message) return;
+  try {
+    const messageBox = document.querySelectorAll("[contenteditable='true']")[1];
+    const message = messageBox.innerHTML
+    if (!message) return;
 
-  const encryptedMessage = encryptMessage(message);
-  messageBox.innerHTML = encryptedMessage;
-  eventx = document.createEvent("UIEvents");
-  eventx.initUIEvent("input", true, true, window, 1);
-  messageBox.dispatchEvent(eventx);
+    const encryptedMessage = encryptMessage(message);
+    messageBox.innerHTML = encryptedMessage;
+    eventx = document.createEvent("UIEvents");
+    eventx.initUIEvent("input", true, true, window, 1);
+    messageBox.dispatchEvent(eventx);
 
-  document.querySelector('span[data-icon="send"]').click();
+    document.querySelector('span[data-icon="send"]').click();
+  } catch (e) {
+    console.log("Ctrl + Enter not allowed here")
+  }
 }
 
 function encryptMessage(message) {
