@@ -10,6 +10,19 @@ globalThis.waitForElementToLoad("._2JIth").then(() => {
   }, 100);
 });
 
+
+document.addEventListener('keydown', function (e) {
+  // Ctrl + E to encrypt and send messages
+  if (e.code === 'KeyE' && e.ctrlKey === true) {
+    // Don't generate a new line
+    try {
+      e.preventDefault();
+      globalThis.encryptAndSend();
+    } catch (error) {
+    }
+  }
+});
+
 async function main() {
   let encodedKeys = await checkIfKeysArePresentInLocalStorage();
   if (!encodedKeys) {
