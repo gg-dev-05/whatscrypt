@@ -136,17 +136,11 @@ function decryptAllMessages() {
             }
             messageNode.innerHTML = globalThis.decrypt(nacl.util.decodeBase64(globalThis.user.encodedPrivateKey), nacl.util.decodeBase64(globalThis.contactPhoneNumberPublicKey), obj)
           }
-          const lockEle = document.createElement('img');
-          lockEle.height = "15"
-          lockEle.width = "15"
-          lockEle.style.marginLeft = "5px"
-          lockEle.style.color = "rgba(255,255,255,0.6)"
-          if (messages[i].classList.contains('message-in')) {
-            lockEle.src = "https://icons8.com/icon/cEcnYFV2oyXU/unlock"
-          } else {
-            lockEle.src = "https://img.icons8.com/ios-glyphs/30/000000/lock--v1.png"
-          }
-          messages[i].querySelector('.l7jjieqr').parentElement.append(lockEle)
+          // const lockEle = document.createElement("svg")
+
+          messages[i].querySelector('.l7jjieqr').parentElement.innerHTML += `<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15" height="15" viewBox="0 0 172 172" style=" fill:#000000; display: inline-block; color: #ffffff99; margin-left: 4px"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><g fill="#ffffff"><path d="M86,11.46667c-22.09818,0 -40.13333,18.03515 -40.13333,40.13333v11.46667h-11.46667c-6.33533,0 -11.46667,5.13133 -11.46667,11.46667v68.8c0,6.33533 5.13133,11.46667 11.46667,11.46667h103.2c6.33533,0 11.46667,-5.13133 11.46667,-11.46667v-68.8c0,-6.33533 -5.13133,-11.46667 -11.46667,-11.46667h-11.46667v-11.46667c0,-21.37626 -16.99027,-38.59356 -38.09531,-39.71901c-0.64841,-0.26118 -1.33911,-0.4016 -2.03802,-0.41432zM86,22.93333c15.90235,0 28.66667,12.76431 28.66667,28.66667v11.46667h-57.33333v-11.46667c0,-15.90235 12.76431,-28.66667 28.66667,-28.66667z" fill="#ffffff99"></path></g></g></svg>`
+
+
         }
       } catch (error) {
         console.error("Unable to decrypt, Invalid keys")
