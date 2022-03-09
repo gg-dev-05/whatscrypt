@@ -144,7 +144,7 @@ function decryptAllMessages() {
 }
 
 async function getPublicKeyFromServer(number) {
-  const response = await fetch(`http://localhost:3000/api/get/${number}`, {
+  const response = await fetch(`https://whatscrypt.herokuapp.com/api/get/${number}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

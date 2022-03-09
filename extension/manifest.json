@@ -10,7 +10,7 @@
     }
   ],
   "host_permissions": [
-    "http://localhost:3000/*"
+    "https://whatscrypt.herokuapp.com/*"
   ],
   "permissions": ["storage"]
 }
