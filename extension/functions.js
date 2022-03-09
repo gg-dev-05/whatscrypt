@@ -92,35 +92,39 @@ function decryptAllMessages() {
   }
 }
 
-// function getFromStorage(key) {
-//   return new Promise((resolve, reject) => {
-//     chrome.storage.sync.get(key, result => resolve(result[key]));
+function getFromStorage(key) {
+  return new Promise((resolve, reject) => {
+    chrome.storage.sync.get(key, result => resolve(result[key]));
+  })
+}
+
+// const getFromStorage = key => {
+//   new Promise((resolve, reject) => {
+//     chrome.storage.sync.get(key, result =>
+//       chrome.runtime.lastError
+//         ? reject(Error(chrome.runtime.lastError.message))
+//         : resolve(result)
+//     )
 //   })
 // }
 
-const getFromStorage = key => {
-  new Promise((resolve, reject) => {
-    chrome.storage.sync.get(key, result =>
-      chrome.runtime.lastError
-        ? reject(Error(chrome.runtime.lastError.message))
-        : resolve(result)
-    )
-  })
+function setToStorage(key, value) {
+  chrome.storage.sync.set({ [key]: value })
 }
 
-// function setToStorage(key, value) {
-//   chrome.storage.sync.set({ [key]: value })
+function clearStorage() {
+  chrome.storage.sync.clear();
+}
+
+// const setToStorage = data => {
+//   new Promise((resolve, reject) => {
+//     chrome.storage.sync.set(data, () =>
+//       chrome.runtime.lastError
+//         ? reject(Error(chrome.runtime.lastError.message))
+//         : resolve()
+//     )
+//   })
 // }
-
-const setToStorage = data => {
-  new Promise((resolve, reject) => {
-    chrome.storage.sync.set(data, () =>
-      chrome.runtime.lastError
-        ? reject(Error(chrome.runtime.lastError.message))
-        : resolve()
-    )
-  })
-}
 
 globalThis.waitForElementToLoad = waitForElementToLoad;
 globalThis.addOnClickListnerForContacts = addOnClickListnerForContacts;
@@ -130,3 +134,4 @@ globalThis.encryptMessage = encryptMessage;
 globalThis.decryptAllMessages = decryptAllMessages;
 globalThis.getFromStorage = getFromStorage;
 globalThis.setToStorage = setToStorage;
+globalThis.clearStorage = clearStorage;
