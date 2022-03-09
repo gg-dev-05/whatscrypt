@@ -7,7 +7,7 @@ let phoneNumber;
 globalThis.waitForElementToLoad("._2JIth").then(() => {
   setTimeout(() => {
     main();
-  }, 100);
+  }, 1000);
 });
 
 

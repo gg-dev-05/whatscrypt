@@ -27,7 +27,7 @@ async function openContact() {
       decryptAllMessages();
       document.getElementsByClassName("_33LGR")[0].onscroll = () => decryptAllMessages();
     } else {
-      alert(`Sorry ${globalThis.contactPhoneNumber} is not using Whatscrypt`)
+      console.log(`Sorry ${globalThis.contactPhoneNumber} is not using Whatscrypt`)
     }
   } else {
     if (globalThis.contactPhoneNumber === "GROUP") return;
