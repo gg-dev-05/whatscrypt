@@ -1,4 +1,3 @@
-const DELIMITER = "B+homS+/TiLl"
 const nacl = require("tweetnacl");
 nacl.util = require("tweetnacl-util");
 
@@ -17,7 +16,6 @@ function decrypt(myPrivateKey, theirPublicKey, encryptedMessage) {
   const sharedKey = nacl.box.before(theirPublicKey, myPrivateKey);
   const message = nacl.box.open.after(encryptedMessage.cipherText, encryptedMessage.oneTimeCode, sharedKey);
   const plainText = nacl.util.encodeUTF8(message);
-  console.log(plainText);
   return plainText;
 }
 
@@ -28,7 +26,6 @@ function decrypt(myPrivateKey, theirPublicKey, encryptedMessage) {
 
 // const encryptedMessage = encrypt(david.secretKey, victoria.publicKey, message);
 // const messageString = nacl.util.encodeBase64(encryptedMessage.cipherText) + DELIMITER + nacl.util.encodeBase64(encryptedMessage.oneTimeCode);
-// console.log(messageString);
 
 
 // const messageGot = messageString.split(DELIMITER);
@@ -37,6 +34,7 @@ function decrypt(myPrivateKey, theirPublicKey, encryptedMessage) {
 //   oneTimeCode: nacl.util.decodeBase64(messageGot[1]),
 // }
 // console.log(decrypt(victoria.secretKey, david.publicKey, obj));
+
 globalThis.nacl = nacl;
 globalThis.initialize = initialize;
 globalThis.encrypt = encrypt;

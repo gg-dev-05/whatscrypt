@@ -18,9 +18,57 @@ function waitForElementToLoad(selector) {
   });
 }
 
-function openContact() {
-  // decrypt on new messages
-  document.getElementsByClassName("_33LGR")[0].onscroll = () => decryptAllMessages();
+async function openContact() {
+  globalThis.contactPhoneNumber = getContactsPhoneNumber();
+  if (globalThis.contactPhoneNumber && globalThis.contactPhoneNumber !== "GROUP") {
+    globalThis.contactPhoneNumberPublicKey = await getPublicKeyFromServer(globalThis.contactPhoneNumber);
+    if (globalThis.contactPhoneNumberPublicKey) {
+      addEncryptSendButton();
+      decryptAllMessages();
+      document.getElementsByClassName("_33LGR")[0].onscroll = () => decryptAllMessages();
+    } else {
+      alert(`Sorry ${globalThis.contactPhoneNumber} is not using Whatscrypt`)
+    }
+  } else {
+    if (globalThis.contactPhoneNumber === "GROUP") return;
+    alert(`Something doesn't seem OK, please try again`)
+  }
+}
+
+function getContactsPhoneNumber() {
+  // open user info panel
+  document.getElementsByClassName("_24-Ff")[0].click();
+
+  // get phone number
+  let phoneNumberWithCountryCode = document.getElementsByClassName("AjtLy _1FXE6 _1lF7t")[0]?.innerText;
+
+  if (!phoneNumberWithCountryCode) phoneNumberWithCountryCode = null;
+
+  // TODO: Not working
+  if (phoneNumberWithCountryCode?.substring(0, 5) === "Group") phoneNumberWithCountryCode = "GROUP";
+
+  if (phoneNumberWithCountryCode && phoneNumberWithCountryCode !== "GROUP" && phoneNumberWithCountryCode[0] !== '+') {
+    // for unsaved numbers
+    phoneNumberWithCountryCode = document.getElementsByClassName("l7jjieqr")[0].textContent;
+  }
+  // close user info panel
+  document.getElementsByClassName("_18eKe")[0].click();
+  if (!phoneNumberWithCountryCode) return null;
+  if (phoneNumberWithCountryCode === "GROUP") return "GROUP";
+
+  return getPhoneNumberFromPhoneNumberWithCountryCode(phoneNumberWithCountryCode);
+}
+
+function getPhoneNumberFromPhoneNumberWithCountryCode(phoneNumberWithCountryCode) {
+  let phoneNumber = "";
+  const phoneNumberSplit = phoneNumberWithCountryCode.split(' ')
+  for (let i = 1; i < phoneNumberSplit.length; i++) {
+    phoneNumber += phoneNumberSplit[i];
+  }
+  return phoneNumber;
+}
+
+function addEncryptSendButton() {
   // clone send button
   const encryptSend = document.getElementsByClassName("_3HQNh _1Ae7k")[0].cloneNode(true)
 
@@ -60,13 +108,16 @@ function encryptAndSend() {
 }
 
 function encryptMessage(message) {
-  const encryptedMessage = globalThis.encrypt(david.secretKey, victoria.publicKey, message);
+  const encryptedMessage = globalThis.encrypt(nacl.util.decodeBase64(globalThis.user.encodedPrivateKey), nacl.util.decodeBase64(globalThis.contactPhoneNumberPublicKey), message);
   const messageString = nacl.util.encodeBase64(encryptedMessage.cipherText) + DELIMITER + nacl.util.encodeBase64(encryptedMessage.oneTimeCode);
   return messageString;
 }
 
 function decryptAllMessages() {
-  const messages = document.getElementsByClassName("y8WcF")[0].children
+  // returns null for sometimes
+  let messages = document.getElementsByClassName("_3K4-L")[0].children
+  if (!messages) messages = document.getElementsByClassName("_33LGR")[0].children
+
   for (let i = 0; i < messages.length; i++) {
     if (!messages[i].classList.contains('decrypted') && (messages[i].classList.contains('message-in') || messages[i].classList.contains('message-out'))) {
       const messageNode = messages[i].getElementsByClassName("i0jNr selectable-text copyable-text")[0]
@@ -81,7 +132,7 @@ function decryptAllMessages() {
               cipherText: nacl.util.decodeBase64(messageGot[0]),
               oneTimeCode: nacl.util.decodeBase64(messageGot[1]),
             }
-            messageNode.innerHTML = globalThis.decrypt(victoria.secretKey, david.publicKey, obj);
+            messageNode.innerHTML = globalThis.decrypt(nacl.util.decodeBase64(globalThis.user.encodedPrivateKey), nacl.util.decodeBase64(globalThis.contactPhoneNumberPublicKey), obj)
           }
         }
       } catch (error) {
@@ -89,6 +140,22 @@ function decryptAllMessages() {
         messageNode.innerHTML = " ==== Unable to decrypt this message ==== "
       }
     }
+  }
+}
+
+async function getPublicKeyFromServer(number) {
+  const response = await fetch(`http://localhost:3000/api/get/${number}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+  })
+  if (response && response.status === 200) {
+    const data = await response.json();
+    return data['publicKey']
+  } else {
+    return null;
   }
 }
 
@@ -132,6 +199,7 @@ globalThis.openContact = openContact;
 globalThis.encryptAndSend = encryptAndSend;
 globalThis.encryptMessage = encryptMessage;
 globalThis.decryptAllMessages = decryptAllMessages;
+globalThis.getPublicKeyFromServer = getPublicKeyFromServer;
 globalThis.getFromStorage = getFromStorage;
 globalThis.setToStorage = setToStorage;
 globalThis.clearStorage = clearStorage;

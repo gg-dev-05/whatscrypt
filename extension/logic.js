@@ -7,7 +7,7 @@ let phoneNumber;
 globalThis.waitForElementToLoad('._2JIth').then(() => {
 	setTimeout(() => {
 		main();
-	}, 1000);
+	}, 100);
 })
 
 async function main() {
@@ -35,7 +35,7 @@ async function main() {
 	}
 	user.encodedPrivateKey = encodedKeys.encodedPrivateKey;
 	user.encodedPublicKey = encodedKeys.encodedPublicKey;
-
+	globalThis.user = user;
 	// add onClickListnerForContacts
 	globalThis.addOnClickListnerForContacts();
 	window.onscroll = () => {
@@ -46,21 +46,9 @@ async function main() {
 async function getPublicKey() {
 	await getPhoneNumber("Enter phone number for verification of your public key");
 	if (stopWhatscrypt) return;
-	const response = await fetch(`http://localhost:3000/api/get/${phoneNumber}`, {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-			'Accept': 'application/json'
-		},
-	})
-	if (response && response.status === 200) {
-		const data = await response.json();
-		return data['publicKey']
-	}
-	else {
-		return null;
-	}
+	return globalThis.getPublicKeyFromServer(phoneNumber);
 }
+
 async function getPhoneNumber(message) {
 	// check local storage
 	phoneNumber = await globalThis.getFromStorage('PHONE_NUMBER');
