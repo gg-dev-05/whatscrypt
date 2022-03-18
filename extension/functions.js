@@ -33,7 +33,7 @@ async function openContact() {
     }
   } else {
     if (globalThis.contactPhoneNumber === "GROUP") return;
-    alert(`Something doesn't seem OK, please try again`)
+    // alert(`Something doesn't seem OK, please try again`)
   }
 }
 
