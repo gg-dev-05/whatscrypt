@@ -203,7 +203,9 @@ function setToStorage(key, value) {
 }
 
 function clearStorage() {
-  chrome.storage.sync.clear();
+  chrome.storage.sync.remove("ENCODED_PRIVATE_KEY")
+  chrome.storage.sync.remove("ENCODED_PUBLIC_KEY")
+  chrome.storage.sync.remove("PHONE_NUMBER")
 }
 
 // const setToStorage = data => {
