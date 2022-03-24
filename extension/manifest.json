@@ -12,5 +12,8 @@
   "host_permissions": [
     "https://whatscrypt.herokuapp.com/*"
   ],
+  "icons": { 
+          "128": "128.png" 
+        },
   "permissions": ["storage"]
 }
