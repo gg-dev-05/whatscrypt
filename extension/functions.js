@@ -138,7 +138,7 @@ function decryptAllMessages() {
               cipherText: nacl.util.decodeBase64(messageGot[0]),
               oneTimeCode: nacl.util.decodeBase64(messageGot[1]),
             }
-            messageNode.innerHTML = globalThis.decrypt(nacl.util.decodeBase64(globalThis.user.encodedPrivateKey), nacl.util.decodeBase64(globalThis.contactPhoneNumberPublicKey), obj)
+            messageNode.innerHTML = urlify(globalThis.decrypt(nacl.util.decodeBase64(globalThis.user.encodedPrivateKey), nacl.util.decodeBase64(globalThis.contactPhoneNumberPublicKey), obj));
           }
           // const lockEle = document.createElement("svg")
           const span = document.createElement("span")
@@ -156,6 +156,12 @@ function decryptAllMessages() {
       }
     }
   }
+}
+function urlify(text) {
+  var urlRegex = /(https?:\/\/[^\s]+)/g;
+  return text.replace(urlRegex, function (url) {
+    return '<a href="' + url + '">' + url + '</a>';
+  })
 }
 
 async function getPublicKeyFromServer(number) {
