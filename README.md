@@ -42,3 +42,8 @@ This happens both ways and we get the desired function. Without access to the re
 - Only drag extension folder (as mentioned in #6 of Installation Instructions).
 - If the extension does not seem to work try to disable you adblocker
 - Since whatscrypt is storing your private key in the browser's storage, if you change browser or remove your private key all previously sent messages will be lost forever as whatscrypt won't be able to decrypt them.
+
+<h3>Helpful Links</h3>
+
+- [Implementing Public Key Cryptography in JS](https://www.section.io/engineering-education/implementing-public-key-cryptography-in-javascript/)
+- [API calls using a chrome extension](https://dev.to/debosthefirst/how-to-build-a-chrome-extension-that-makes-api-calls-1g04)
