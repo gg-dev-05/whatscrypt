@@ -1,5 +1,3 @@
-# WHATSCRYPT
-
 <p align="center">
   <img src="https://user-images.githubusercontent.com/59741135/159886607-54432562-65a3-435b-8d1a-58f8f91bda74.png" width="75" height="75"/>
 </p>
