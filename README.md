@@ -35,7 +35,12 @@ This happens both ways and we get the desired function. Without access to the re
 1. Download this repo as a [ZIP file from GitHub](https://github.com/gg-dev-05/whatscrypt/archive/refs/heads/master.zip)
 1. Unzip the file and you should have a folder named `whatscrypt-master`.
 1. Open `whatscrypt-master` folder (A folder named `extension` should be visible )
-1. In Chrome/Edge go to the extensions page (`chrome://extensions` or `brave://extensions`).
-1. Enable `Developer Mode`.
-1. Drag the `extension` folder anywhere on the page to import it (do not delete the folder afterwards).  
-   **NOTE** Only drag extension folder
+1. Go to the extensions page (<a href="chrome://extensions">`chrome://extensions`</a>).
+1. Enable `Developer Mode` ( A toggle switch should be present on the top right corner).
+1. Drag the `extension` folder anywhere on the page to import it.
+
+<h3>Important Points</h3>
+
+- Only drag extension folder (as mentioned in #6 of Installation Instructions).
+- If the extension does not seem to work try to disable you adblocker
+- Since whatscrypt is storing your private key in the browser's storage, if you change browser or remove your private key all previously sent messages will be lost forever as whatscrypt won't be able to decrypt them.
