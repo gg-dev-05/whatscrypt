@@ -158,9 +158,11 @@ function decryptAllMessages() {
   }
 }
 function urlify(text) {
-  var urlRegex = /(https?:\/\/[^\s]+)/g;
+  var urlRegex = /(((https?:\/\/)|(www\.))[^\s]+)/g;
   return text.replace(urlRegex, function (url) {
-    return '<a href="' + url + '">' + url + '</a>';
+    if (url.substring(0, 3) === "www") url = "https://" + url;
+    console.log(`<a target="_blank" href="${url}">${url}</a>`);
+    return `<a target="_blank" href="${url}">${url}</a>`;
   })
 }
 
