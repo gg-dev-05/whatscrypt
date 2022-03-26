@@ -138,7 +138,15 @@ function decryptAllMessages() {
               cipherText: nacl.util.decodeBase64(messageGot[0]),
               oneTimeCode: nacl.util.decodeBase64(messageGot[1]),
             }
-            messageNode.innerHTML = globalThis.decrypt(nacl.util.decodeBase64(globalThis.user.encodedPrivateKey), nacl.util.decodeBase64(globalThis.contactPhoneNumberPublicKey), obj)
+            let msg = globalThis.decrypt(nacl.util.decodeBase64(globalThis.user.encodedPrivateKey), nacl.util.decodeBase64(globalThis.contactPhoneNumberPublicKey), obj);
+
+            //for converting urls to actual link
+            let pattern1 = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+            let str1 = msg.replace(pattern1, "<a href='$1'>$1</a>");
+
+            let pattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+            let msgWithLink = str1.replace(pattern2, '$1<a target="_blank" href="http://$2">$2</a>');
+            messageNode.innerHTML = msgWithLink;
           }
           // const lockEle = document.createElement("svg")
           const span = document.createElement("span")
